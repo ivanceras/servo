@@ -49,7 +49,7 @@ use script::dom::htmlimageelement::LayoutHTMLImageElementHelpers;
 use script::dom::htmlinputelement::{HTMLInputElement, LayoutHTMLInputElementHelpers};
 use script::dom::htmltextareaelement::{HTMLTextAreaElement, LayoutHTMLTextAreaElementHelpers};
 use script::dom::node::{HAS_CHANGED, HAS_DIRTY_DESCENDANTS, IS_DIRTY};
-use script::dom::node::{LayoutNodeHelpers, Node, SharedLayoutData};
+use script::dom::node::{IN_FRAGMENTATION_CONTAINER, LayoutNodeHelpers, Node, SharedLayoutData};
 use script::dom::text::Text;
 use script::layout_interface::TrustedNodeAddress;
 use selectors::matching::DeclarationBlock;
@@ -429,6 +429,14 @@ impl<'ln> ServoLayoutNode<'ln> {
     fn debug_str(self) -> String {
         format!("{:?}: changed={} dirty={} dirty_descendants={}",
                 self.type_id(), self.has_changed(), self.is_dirty(), self.has_dirty_descendants())
+    }
+
+    pub fn in_fragmentation_container(&self) -> bool {
+        unsafe { self.node.get_flag(IN_FRAGMENTATION_CONTAINER) }
+    }
+
+    pub unsafe fn set_in_fragmentation_container(&self, value: bool) {
+        self.node.set_flag(IN_FRAGMENTATION_CONTAINER, value)
     }
 
     pub fn flow_debug_id(self) -> usize {
@@ -1006,6 +1014,10 @@ impl<'ln> ServoThreadSafeLayoutNode<'ln> {
         unsafe {
             self.node.borrow_layout_data_unchecked()
         }
+    }
+
+    pub fn in_fragmentation_container(&self) -> bool {
+        self.node.in_fragmentation_container()
     }
 }
 
