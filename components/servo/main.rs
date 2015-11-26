@@ -52,6 +52,7 @@ fn load_gl_when_headless() {}
 
 fn main() {
     // Parse the command line options and store them globally
+    println!("In main....hacked by lee...");
     let opts_result = opts::from_cmdline_args(&*args());
 
     let content_process_token = if let ArgumentParsingResult::ContentProcess(token) = opts_result {
@@ -138,6 +139,7 @@ struct BrowserWrapper {
 
 impl app::NestedEventLoopListener for BrowserWrapper {
     fn handle_event_from_nested_event_loop(&mut self, event: WindowEvent) -> bool {
+        println!("seems this line is never called..");
         let is_resize = match event {
             WindowEvent::Resize(..) => true,
             _ => false,
