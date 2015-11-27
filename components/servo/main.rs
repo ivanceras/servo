@@ -51,6 +51,7 @@ fn load_gl_when_headless() {
 fn load_gl_when_headless() {}
 
 fn main() {
+	println!("In main...");
     // Parse the command line options and store them globally
     let opts_result = opts::from_cmdline_args(&*args());
 
@@ -97,6 +98,7 @@ fn main() {
     // Feed events from the window to the browser until the browser
     // says to stop.
     loop {
+		//println!("in the loop...");
         let should_continue = match window {
             None => browser.browser.handle_events(Vec::new()),
             Some(ref window) => browser.browser.handle_events(window.wait_events()),
@@ -138,8 +140,13 @@ struct BrowserWrapper {
 
 impl app::NestedEventLoopListener for BrowserWrapper {
     fn handle_event_from_nested_event_loop(&mut self, event: WindowEvent) -> bool {
+		println!("Is this even called?");
         let is_resize = match event {
-            WindowEvent::Resize(..) => true,
+            WindowEvent::Resize(..) => {
+				println!("lee is resizing this....");
+				true
+			
+			},
             _ => false,
         };
         if !self.browser.handle_events(vec![event]) {
